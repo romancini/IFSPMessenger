@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">IFSP Messenger</string>
+    <string name="smile_sorriso">:)</string>
+    <string name="URL_BASE">http://www.nobile.pro.br/sdm/mensageiro/</string>
+</resources>
