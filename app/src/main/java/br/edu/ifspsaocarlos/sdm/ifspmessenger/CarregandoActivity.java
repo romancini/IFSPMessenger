@@ -26,6 +26,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.DatabaseHelper;
+
 public class CarregandoActivity extends Activity {
     private ProgressBar progressBar;
     private final int ABRIR_ACTIVITY_LOGIN = 0;

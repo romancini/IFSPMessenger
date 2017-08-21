@@ -1,4 +1,4 @@
-package br.edu.ifspsaocarlos.sdm.ifspmessenger;
+package br.edu.ifspsaocarlos.sdm.ifspmessenger.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

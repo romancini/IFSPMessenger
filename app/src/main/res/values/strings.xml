@@ -2,4 +2,9 @@
     <string name="app_name">IFSP Messenger</string>
     <string name="smile_sorriso">:)</string>
     <string name="URL_BASE">http://www.nobile.pro.br/sdm/mensageiro/</string>
+    <string name="nome_completo">Nome Completo</string>
+    <string name="apelido">Apelido</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="cadastro_fragment">Cadastro de usuário</string>
+    <string name="login">Login</string>
 </resources>

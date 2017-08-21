@@ -1,0 +1,37 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.edu.ifspsaocarlos.sdm.ifspmessenger.fragments.CadastrarUsuarioFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nome_completo"
+        android:labelFor="@+id/et_nome"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_nome"
+        android:maxLines="1"
+        android:inputType="text">
+        <requestFocus />
+    </EditText>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/apelido"
+        android:labelFor="@+id/et_usuario"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_usuario"
+        android:inputType="text"/>
+    <Button
+        android:id="@+id/btn_cadastro_usuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cadastrar"
+        android:textAlignment="center"/>
+
+</FrameLayout>

@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.DatabaseHelper;
+
 public class PrincipalActivity extends AppCompatActivity {
 
     @Override
