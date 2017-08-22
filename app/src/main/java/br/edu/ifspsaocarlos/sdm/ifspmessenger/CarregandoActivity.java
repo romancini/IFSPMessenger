@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.edu.ifspsaocarlos.sdm.ifspmessenger.dao.UsuarioDao;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.DatabaseHelper;
 
 public class CarregandoActivity extends Activity {
@@ -33,8 +34,6 @@ public class CarregandoActivity extends Activity {
     private final int ABRIR_ACTIVITY_LOGIN = 0;
     private final int ABRIR_ACTIVITY_PRINCIPAL = 1;
     private final int TEMPO_CARREGANDO = 3000;
-    private SQLiteDatabase db;
-    private DatabaseHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,7 @@ public class CarregandoActivity extends Activity {
 
     private void verificarPrimeiraExecucao() {
         AsyncTask<Void, Void, Void> tarefa = new AsyncTask<Void, Void, Void>() {
-            //private SQLiteDatabase db;
-            //private DatabaseHelper helper;
+            UsuarioDao usuario;
 
             @Override
             protected void onPreExecute() {
@@ -58,15 +56,9 @@ public class CarregandoActivity extends Activity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                helper = new DatabaseHelper(getBaseContext());
-                db = helper.getReadableDatabase();
-                //verificar se a tabela de usuarios  está vazia
-                Cursor cursor = db.rawQuery("SELECT count(id) FROM usuarios", null);
-                cursor.moveToFirst();
-                int totalUsuarios = cursor.getInt(0);
-                cursor.close();
+                usuario = new UsuarioDao(getBaseContext());
 
-                if (totalUsuarios < 1)
+                if (usuario.obterNumeroUsuarios() < 1)
                 {
                     RequestQueue queue = Volley.newRequestQueue(CarregandoActivity.this);
                     String url = getString(R.string.URL_BASE) + "contato";
@@ -78,17 +70,15 @@ public class CarregandoActivity extends Activity {
                             new Response.Listener<JSONObject>() {
                                 public void onResponse(JSONObject s) {
                                     JSONArray jsonArray;
-                                    ContentValues values;
+                                    UsuarioDao usuario = new UsuarioDao(getBaseContext());
                                     try {
                                         jsonArray = s.getJSONArray("contatos");
                                         for (int i = 0; i < jsonArray.length(); i++) {
                                             JSONObject jO = jsonArray.getJSONObject(i);
-                                            values = new ContentValues();
-                                            values.put("id", jO.getInt("id"));
-                                            values.put("nome_completo", jO.getString("nome_completo"));
-                                            values.put("apelido", jO.getString("apelido"));
-                                            values.put("logado", 0);
-                                            db.insert("usuarios", null, values);
+                                            usuario.cadastrarDB(
+                                                    jO.getInt("id"),
+                                                    jO.getString("nome_completo"),
+                                                    jO.getString("apelido"));
                                         }
                                     }
                                     catch (JSONException je) {
@@ -126,10 +116,11 @@ public class CarregandoActivity extends Activity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                usuario = new UsuarioDao(getBaseContext());
                 progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(CarregandoActivity.this, R.string.smile_sorriso, Toast.LENGTH_LONG).show();
                 Message mensagem = new Message();
-                if (verificarUsuarioJaLogado())
+                if (usuario.verificarUsuarioJaLogado())
                     mensagem.what = ABRIR_ACTIVITY_PRINCIPAL;
                 else
                     mensagem.what = ABRIR_ACTIVITY_LOGIN;
@@ -137,19 +128,6 @@ public class CarregandoActivity extends Activity {
             }
         };
         tarefa.execute();
-    }
-
-    private boolean verificarUsuarioJaLogado() {
-        helper = new DatabaseHelper(getBaseContext());
-        db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT count(id) FROM usuarios where logado = 1", null);
-        cursor.moveToFirst();
-        int usuarioLogado = cursor.getInt(0);
-        cursor.close();
-        if (usuarioLogado == 1)
-            return true;
-        else
-            return false;
     }
 
     private Handler handler = new Handler(){

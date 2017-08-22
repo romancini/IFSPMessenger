@@ -1,19 +1,24 @@
 package br.edu.ifspsaocarlos.sdm.ifspmessenger;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.fragments.EntrarFragment;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        EntrarFragment entrarFragment = new EntrarFragment();
-        entrarFragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().add(R.id.content_frame, entrarFragment).commit();
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.content_frame, new EntrarFragment());
+        fragmentTransaction.commit();
     }
 }

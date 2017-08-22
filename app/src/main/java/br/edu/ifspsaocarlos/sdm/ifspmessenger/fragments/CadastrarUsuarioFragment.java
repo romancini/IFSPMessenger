@@ -2,6 +2,7 @@ package br.edu.ifspsaocarlos.sdm.ifspmessenger.fragments;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.edu.ifspsaocarlos.sdm.ifspmessenger.LoginActivity;
+import br.edu.ifspsaocarlos.sdm.ifspmessenger.dao.UsuarioDao;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.DatabaseHelper;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.PrincipalActivity;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.R;
@@ -34,9 +37,7 @@ import br.edu.ifspsaocarlos.sdm.ifspmessenger.models.Usuario;
  * A simple {@link Fragment} subclass.
  */
 public class CadastrarUsuarioFragment extends Fragment {
-    private SQLiteDatabase db;
-    private DatabaseHelper helper;
-    private String nome, apelido;
+    String nome, apelido;
 
     public CadastrarUsuarioFragment() {
         // Required empty public constructor
@@ -53,7 +54,7 @@ public class CadastrarUsuarioFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cadastrar_usuario, null);
 
-        ((PrincipalActivity)getActivity())
+        ((LoginActivity)getActivity())
                 .getSupportActionBar()
                 .setSubtitle(getString(R.string.cadastro_fragment));
 
@@ -63,35 +64,38 @@ public class CadastrarUsuarioFragment extends Fragment {
             public void onClick(View v){
                 nome = ((EditText) view.findViewById(R.id.et_nome)).getText().toString();
                 apelido = ((EditText) view.findViewById(R.id.et_usuario)).getText().toString();
-                Usuario u = new Usuario(nome, apelido);
-                cadastrarUsuario(u);
+                cadastrarUsuario(nome, apelido);
             }
         });
 
         return view;
     }
 
-    private void cadastrarUsuario(Usuario usuario) {
-        AsyncTask<Usuario, Void, Usuario> tarefa = new AsyncTask<Usuario, Void, Usuario>() {
-            private Usuario usuarioAT;
+    private void cadastrarUsuario(String nome, String apelido) {
+        AsyncTask<String, Void, Usuario> tarefa = new AsyncTask<String, Void, Usuario>() {
+            UsuarioDao usuarioDao;
+            private Integer id;
+            private String nome, apelido;
 
             @Override
-            protected Usuario doInBackground(Usuario... params) {
-                usuarioAT = params[0];
+            protected Usuario doInBackground(final String... params) {
+                nome = params[0];
+                apelido = params[1];
+                usuarioDao = new UsuarioDao(getActivity());
                 // request para a api enviando dados para cadastro
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
-                String url = getString(R.string.URL_BASE) + "/usuario";
-                String string = params[0].cadastroString();
+                String url = getString(R.string.URL_BASE) + "contato";
                 try {
-                    final JSONObject jsonBody = new JSONObject(string);
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    final JSONObject jsonBody =
+                            new JSONObject(usuarioDao.obterStringCadastro(nome, apelido));
+                    /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.POST,
                             url,
                             jsonBody,
                             new Response.Listener<JSONObject>() {
                                 public void onResponse(JSONObject s) {
                                     try {
-                                        usuarioAT.setId(s.getInt("id"));
+                                        id = s.getInt("id");
                                     } catch (JSONException e) {
                                         Log.e("IFSPMsg", "Erro ao obter id do Usuário");
                                     }
@@ -106,35 +110,37 @@ public class CadastrarUsuarioFragment extends Fragment {
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
-                    queue.add(jsonObjectRequest);
+                    queue.add(jsonObjectRequest);*/
+                    id = 1015;
                 }catch (Exception e ) {
                     Log.e("IFSPMsg", "Erro geral no cadastro do Usuário");
                 }
 
-                return usuarioAT;
+                return new Usuario(id, nome, apelido);
             }
 
             @Override
-            protected void onPostExecute(Usuario usuario) {
-                super.onPostExecute(usuario);
-                // cadastro na base local
+            protected void onPostExecute(Usuario usuarioBean) {
+                super.onPostExecute(usuarioBean);
                 try {
-                    helper = new DatabaseHelper(getActivity());
-                    db = helper.getWritableDatabase();
-                    ContentValues values = new ContentValues();
-                    values.put("id", usuario.getId());
-                    values.put("nome_completo", usuario.getNome_completo());
-                    values.put("apelido", usuario.getApelido());
-                    db.insert("usuarios", null, values);
+                    usuarioDao.cadastrarDB(
+                            usuarioBean.getId(),
+                            usuarioBean.getNome_completo(),
+                            usuarioBean.getApelido());
+                    usuarioDao.setarUsuarioComoLogado(apelido);
                     Toast.makeText(getActivity(), "Cadastro realizado com sucesso",
                             Toast.LENGTH_SHORT).show();
+                    Intent principal = new Intent(getActivity(), PrincipalActivity.class);
+                    startActivity(principal);
+
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), "Erro ao cadastrar", Toast.LENGTH_SHORT).show();
-                    System.out.println("erro: " + e);
+                    Toast.makeText(getActivity(), "Erro ao cadastrar no banco o usuário",
+                            Toast.LENGTH_SHORT).show();
+                    Log.e("IFSPMsg", ": Erro ao cadastrar no banco o usuário: " + e);
                 }
             }
         };
-        tarefa.execute(usuario);
+        tarefa.execute(nome, apelido);
     }
 
 }

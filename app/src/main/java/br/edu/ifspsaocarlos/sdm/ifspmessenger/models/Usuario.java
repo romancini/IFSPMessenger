@@ -9,23 +9,10 @@ public class Usuario {
     private String nome_completo;
     private String apelido;
 
-    public Usuario(){}
-
     public Usuario(int id, String nome_completo, String apelido){
         this.id = id;
         this.nome_completo = nome_completo;
         this.apelido = apelido;
-    }
-
-    public Usuario(String nome_completo, String apelido){
-        this.nome_completo = nome_completo;
-        this.apelido = apelido;
-    }
-
-    public String cadastroString(){
-        String retorno = "{\"nome_completo\":\"" + this.nome_completo +
-                         "\",\"apelido\":\"" + this.apelido + "\"}";
-        return retorno;
     }
 
     public int getId() {

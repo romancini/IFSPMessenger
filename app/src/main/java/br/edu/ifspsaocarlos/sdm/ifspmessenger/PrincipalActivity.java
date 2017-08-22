@@ -16,7 +16,7 @@ public class PrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_principal);
         DatabaseHelper helper = new DatabaseHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT count(id) FROM usuarios", null);
+        Cursor cursor = db.rawQuery("SELECT count(id) FROM usuarios where logado = 1", null);
         cursor.moveToFirst();
         int totalUsuarios = cursor.getInt(0);
         cursor.close();
