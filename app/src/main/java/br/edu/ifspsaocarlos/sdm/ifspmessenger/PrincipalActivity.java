@@ -16,11 +16,15 @@ public class PrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_principal);
         DatabaseHelper helper = new DatabaseHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT count(id) FROM usuarios where logado = 1", null);
+        Cursor cursor = db.rawQuery("SELECT nome_completo FROM usuarios where logado = 1", null);
         cursor.moveToFirst();
-        int totalUsuarios = cursor.getInt(0);
+        String nomes = "";
+        for (int i = 0; i < cursor.getCount(); i++) {
+            nomes = nomes + cursor.getString(0) + " - ";
+            cursor.moveToNext();
+        }
         cursor.close();
         TextView tv = (TextView) findViewById(R.id.helloTextView);
-        tv.setText("" + totalUsuarios);
+        tv.setText(nomes);
     }
 }

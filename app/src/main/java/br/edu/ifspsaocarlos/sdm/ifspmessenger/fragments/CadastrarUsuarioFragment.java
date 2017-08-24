@@ -88,7 +88,7 @@ public class CadastrarUsuarioFragment extends Fragment {
                 try {
                     final JSONObject jsonBody =
                             new JSONObject(usuarioDao.obterStringCadastro(nome, apelido));
-                    /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.POST,
                             url,
                             jsonBody,
@@ -110,10 +110,25 @@ public class CadastrarUsuarioFragment extends Fragment {
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
-                    queue.add(jsonObjectRequest);*/
-                    id = 1015;
+                    queue.add(jsonObjectRequest);
                 }catch (Exception e ) {
                     Log.e("IFSPMsg", "Erro geral no cadastro do Usuário");
+                }
+
+                int count = 0;
+                while (id == null){
+                    count++;
+                    if (count > 9){
+                        Toast.makeText(getActivity(),
+                                "Tentativas esgotadas de conexão com o servidor!",
+                                Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException();
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Log.e("IFSPMsg", "Erro ao esperar");
+                    }
                 }
 
                 return new Usuario(id, nome, apelido);
