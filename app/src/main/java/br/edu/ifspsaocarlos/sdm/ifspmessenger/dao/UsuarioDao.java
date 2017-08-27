@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.ListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.models.Usuario;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.DatabaseHelper;
@@ -34,7 +38,9 @@ public class UsuarioDao {
         values.put("nome_completo", nome_completo);
         values.put("apelido", apelido);
         values.put("logado", 0);
+        values.put("contato", 0);
         db.insert("usuarios", null, values);
+        db.close();
     }
 
     public int obterNumeroUsuarios(){
@@ -43,6 +49,7 @@ public class UsuarioDao {
         cursor.moveToFirst();
         int totalUsuarios = cursor.getInt(0);
         cursor.close();
+        db.close();
 
         return totalUsuarios;
     }
@@ -53,6 +60,7 @@ public class UsuarioDao {
         cursor.moveToFirst();
         int usuarioLogado = cursor.getInt(0);
         cursor.close();
+        db.close();
         if (usuarioLogado == 1)
             return true;
         else
@@ -66,6 +74,7 @@ public class UsuarioDao {
         cursor.moveToFirst();
         int retorno = cursor.getInt(0);
         cursor.close();
+        db.close();
 
         if (retorno == 1)
             return true;
@@ -87,6 +96,35 @@ public class UsuarioDao {
         values.put("nome_completo", nome);
         values.put("apelido", apelido);
         values.put("logado", 1);
+        values.put("contato", 0);
         db.update("usuarios", values, "id=" + id, null);
+        db.close();
+    }
+
+    public List<Usuario> obterContatos() {
+        List<Usuario> contatos = new ArrayList<>();
+        Usuario contato;
+        db = helper.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT id, nome_completo, apelido from usuarios " +
+                " where logado = 0 and contato = 0", null);
+        if (c != null ) {
+            if  (c.moveToFirst()) {
+                do {
+                    contato = new Usuario(
+                            c.getInt(0),
+                            c.getString(1),
+                            c.getString(2));
+                    contatos.add(contato);
+                }while (c.moveToNext());
+            }
+        }
+        c.close();
+        db.close();
+
+        return contatos;
+    }
+
+    public void carregarMensagens() {
+
     }
 }

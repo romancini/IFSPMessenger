@@ -30,7 +30,6 @@ import br.edu.ifspsaocarlos.sdm.ifspmessenger.dao.UsuarioDao;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.DatabaseHelper;
 
 public class CarregandoActivity extends Activity {
-    private ProgressBar progressBar;
     private final int ABRIR_ACTIVITY_LOGIN = 0;
     private final int ABRIR_ACTIVITY_PRINCIPAL = 1;
     private final int TEMPO_CARREGANDO = 3000;
@@ -39,20 +38,12 @@ public class CarregandoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carregando);
-        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
-        progressBar.setVisibility(View.INVISIBLE);
         verificarPrimeiraExecucao();
     }
 
     private void verificarPrimeiraExecucao() {
         AsyncTask<Void, Void, Void> tarefa = new AsyncTask<Void, Void, Void>() {
             UsuarioDao usuario;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressBar.setVisibility(View.VISIBLE);
-            }
 
             @Override
             protected Void doInBackground(Void... params) {
@@ -117,7 +108,6 @@ public class CarregandoActivity extends Activity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 usuario = new UsuarioDao(getBaseContext());
-                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(CarregandoActivity.this, R.string.smile_sorriso, Toast.LENGTH_LONG).show();
                 Message mensagem = new Message();
                 if (usuario.verificarUsuarioJaLogado())

@@ -8,6 +8,8 @@ public class Usuario {
     private int id;
     private String nome_completo;
     private String apelido;
+    private int logado = 0;
+    private int contato = 0;
 
     public Usuario(int id, String nome_completo, String apelido){
         this.id = id;
@@ -37,5 +39,21 @@ public class Usuario {
 
     public void setApelido(String apelido) {
         this.apelido = apelido;
+    }
+
+    public int getLogado() {
+        return logado;
+    }
+
+    public void setLogado(int logado) {
+        this.logado = logado;
+    }
+
+    public int getContato() {
+        return contato;
+    }
+
+    public void setContato(int contato) {
+        this.contato = contato;
     }
 }

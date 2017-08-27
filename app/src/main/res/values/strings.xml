@@ -7,4 +7,13 @@
     <string name="cadastrar">Cadastrar</string>
     <string name="cadastro_fragment">Cadastro de usuário</string>
     <string name="login">Login</string>
+    <string name="fechar_drawer">Fechar</string>
+    <string name="abrir_drawer">Abrir</string>
+    <string-array name="lista_menu">
+        <item>Adicionar Contatos</item>
+        <item>Verificar Conversas</item>
+    </string-array>
+
+    <string name="contatos_fragment">Selecionar um Contato</string>
+    <string name="conversas_fragment">Conversas Ativas</string>
 </resources>

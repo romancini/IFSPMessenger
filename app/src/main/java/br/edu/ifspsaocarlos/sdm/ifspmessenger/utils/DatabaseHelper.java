@@ -22,7 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "id INTEGER," +
                 "nome_completo TEXT NOT NULL," +
                 "apelido TEXT NOT NULL," +
-                "logado INTEGER);");
+                "logado INTEGER," +
+                "contato INTEGER);");
 
         sqLiteDatabase.execSQL("CREATE TABLE mensagens (" +
                 "id INTEGER," +
