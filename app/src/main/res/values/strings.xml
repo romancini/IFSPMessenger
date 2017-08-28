@@ -16,4 +16,5 @@
 
     <string name="contatos_fragment">Selecionar um Contato</string>
     <string name="conversas_fragment">Conversas Ativas</string>
+    <string name="sem_conversas_ativas">Adicione um usuário e comece a conversar</string>
 </resources>

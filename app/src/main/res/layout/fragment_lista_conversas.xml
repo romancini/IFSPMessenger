@@ -4,10 +4,15 @@
     android:layout_height="match_parent"
     tools:context="br.edu.ifspsaocarlos.sdm.ifspmessenger.fragments.ListaConversasFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/conversas_fragment" />
+        android:id="@+id/textViewMensagem"
+        android:text="@string/sem_conversas_ativas" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView_contatos"/>
 
 </FrameLayout>

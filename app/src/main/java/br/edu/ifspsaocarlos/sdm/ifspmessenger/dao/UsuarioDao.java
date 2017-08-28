@@ -84,12 +84,11 @@ public class UsuarioDao {
 
     public void setarUsuarioComoLogado(String apelido){
         db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT id, nome_completo, logado FROM usuarios where apelido = '"
+        Cursor cursor = db.rawQuery("SELECT id, nome_completo FROM usuarios where apelido = '"
                 + apelido + "'", null);
         cursor.moveToFirst();
         int id = cursor.getInt(0);
         String nome = cursor.getString(1);
-        int logado = cursor.getInt(2);
         cursor.close();
         values = new ContentValues();
         values.put("id", id);
@@ -124,7 +123,44 @@ public class UsuarioDao {
         return contatos;
     }
 
-    public void carregarMensagens() {
+    public List<Usuario> obterContatosConversasAtivas() {
+        List<Usuario> contatos = new ArrayList<>();
+        Usuario contato;
+        db = helper.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT id, nome_completo, apelido from usuarios " +
+                " where logado = 0 and contato = 1", null);
+        if (c != null ) {
+            if  (c.moveToFirst()) {
+                do {
+                    contato = new Usuario(
+                            c.getInt(0),
+                            c.getString(1),
+                            c.getString(2));
+                    contatos.add(contato);
+                }while (c.moveToNext());
+            }
+        }
+        c.close();
+        db.close();
 
+        return contatos;
+    }
+
+    public void setarUsuarioComoContato(int id) {
+        db = helper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT nome_completo, apelido FROM usuarios where id = '"
+                + id + "'", null);
+        cursor.moveToFirst();
+        String nome = cursor.getString(0);
+        String apelido = cursor.getString(1);
+        cursor.close();
+        values = new ContentValues();
+        values.put("id", id);
+        values.put("nome_completo", nome);
+        values.put("apelido", apelido);
+        values.put("logado", 0);
+        values.put("contato", 1);
+        db.update("usuarios", values, "id=" + id, null);
+        db.close();
     }
 }
