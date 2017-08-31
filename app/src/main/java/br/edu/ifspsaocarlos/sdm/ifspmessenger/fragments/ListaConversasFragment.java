@@ -55,13 +55,14 @@ public class ListaConversasFragment extends Fragment implements AdapterView.OnIt
             textViewMensagem.setVisibility(View.INVISIBLE);
         }
 
-
         return view;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Usuario usuario = contatos.get(position);
         Intent conversa = new Intent(getActivity(), ConversaActivity.class);
+        conversa.putExtra("id_contato", usuario.getId());
         startActivity(conversa);
     }
 }

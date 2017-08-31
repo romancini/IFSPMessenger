@@ -52,7 +52,7 @@ public class EntrarFragment extends Fragment {
             public void onClick(View v) {
                 if (usuario.validarUsuarioExistente(etApelido.getText().toString())) {
                     usuario.setarUsuarioComoLogado(etApelido.getText().toString());
-                    Toast.makeText(getActivity(), R.string.smile_sorriso,
+                    Toast.makeText(getActivity(), R.string.ok,
                             Toast.LENGTH_LONG).show();
                     Intent principal = new Intent(getActivity(), PrincipalActivity.class);
                     startActivity(principal);

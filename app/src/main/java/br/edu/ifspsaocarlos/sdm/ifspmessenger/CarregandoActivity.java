@@ -108,7 +108,8 @@ public class CarregandoActivity extends Activity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 usuario = new UsuarioDao(getBaseContext());
-                Toast.makeText(CarregandoActivity.this, R.string.smile_sorriso, Toast.LENGTH_LONG).show();
+                Toast.makeText(CarregandoActivity.this, R.string.carregando,
+                        Toast.LENGTH_LONG).show();
                 Message mensagem = new Message();
                 if (usuario.verificarUsuarioJaLogado())
                     mensagem.what = ABRIR_ACTIVITY_PRINCIPAL;
