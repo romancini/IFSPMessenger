@@ -19,4 +19,10 @@
     <string name="contatos_fragment">Selecionar um Contato</string>
     <string name="conversas_fragment">Conversas Ativas</string>
     <string name="sem_conversas_ativas">Adicione um usuário e comece a conversar</string>
+    <string name="novo_contato_adicionado">Novo contato adicionado</string>
+    <string name="novo_contato">Novo Contato</string>
+    <string name="clique_aqui">Clique Aqui</string>
+    <string name="contatos_atualizados">Novo contato adicionado</string>
+    <string name="nova_mensagem">Nova Mensagem</string>
+    <string name="nova_mensagem_de">Nova Mensagem de: </string>
 </resources>

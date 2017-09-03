@@ -20,7 +20,16 @@
         </activity>
         <activity android:name=".PrincipalActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".ConversaActivity"></activity>
+        <activity android:name=".ConversaActivity" />
+
+        <service
+            android:name=".services.MensagensService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.ContatoService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

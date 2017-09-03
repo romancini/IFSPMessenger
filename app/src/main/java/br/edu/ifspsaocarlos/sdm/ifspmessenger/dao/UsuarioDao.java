@@ -33,13 +33,18 @@ public class UsuarioDao {
 
     public void cadastrarDB(int id, String nome_completo, String apelido){
         db = helper.getWritableDatabase();
-        values = new ContentValues();
-        values.put("id", id);
-        values.put("nome_completo", nome_completo);
-        values.put("apelido", apelido);
-        values.put("logado", 0);
-        values.put("contato", 0);
-        db.insert("usuarios", null, values);
+        Cursor cursor = db.rawQuery("SELECT count(id) FROM usuarios where id = " + id, null);
+        cursor.moveToFirst();
+        int usuarioExistente = cursor.getInt(0);
+        if (usuarioExistente == 0) {
+            values = new ContentValues();
+            values.put("id", id);
+            values.put("nome_completo", nome_completo);
+            values.put("apelido", apelido);
+            values.put("logado", 0);
+            values.put("contato", 0);
+            db.insert("usuarios", null, values);
+        }
         db.close();
     }
 
@@ -65,6 +70,17 @@ public class UsuarioDao {
             return true;
         else
             return false;
+    }
+
+    public int obterIdUsuarioLogado(){
+        db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id FROM usuarios where logado = 1", null);
+        cursor.moveToFirst();
+        int id = cursor.getInt(0);
+        cursor.close();
+        db.close();
+
+        return id;
     }
 
     public boolean validarUsuarioExistente(String apelido){
