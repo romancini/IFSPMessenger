@@ -29,10 +29,11 @@ import br.edu.ifspsaocarlos.sdm.ifspmessenger.dao.MensagemDao;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.dao.UsuarioDao;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.models.Mensagem;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.models.Usuario;
+import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.ListaMensagemAdapter;
 
 public class ConversaActivity extends AppCompatActivity implements View.OnClickListener {
     private int idContatoConversa;
-    private ListAdapter mensagensAdapter;
+    private ListaMensagemAdapter listaMensagemAdapter;
     private ListView mensagensListView;
     private ImageButton mensagemButton;
     private EditText mensagemEditText;
@@ -45,11 +46,12 @@ public class ConversaActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversa);
 
+        mensagemDao = new MensagemDao(getBaseContext());
         idContatoConversa = getIntent().getIntExtra("id_contato", 0);
         mensagens = mensagemDao.obterConversaContato(idContatoConversa);
-        mensagensAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mensagens);
+        listaMensagemAdapter = new ListaMensagemAdapter(this, mensagens);
         mensagensListView = (ListView)findViewById(R.id.msgListView);
-        mensagensListView.setAdapter(mensagensAdapter);
+        mensagensListView.setAdapter(listaMensagemAdapter);
         mensagemButton = (ImageButton)findViewById(R.id.sendMessageButton);
         mensagemButton.setOnClickListener(this);
         // rodar processo para ficar lendo banco de dados de mensagens para o contato
@@ -73,7 +75,6 @@ public class ConversaActivity extends AppCompatActivity implements View.OnClickL
                 mensagemDao = new MensagemDao(getBaseContext());
                 while(true){
                     mensagens = mensagemDao.obterConversaContato(idContatoConversa);
-                    // TODO atualizar listview
                     sleep(500);
                 }
             } catch (Exception e) {
@@ -124,7 +125,7 @@ public class ConversaActivity extends AppCompatActivity implements View.OnClickL
                             });
                     queue.add(jsonObjectRequest);
                 }catch (Exception e ) {
-                    Log.e("IFSPMsg", "Erro geral no cadastro do Usuário");
+                    Log.e("IFSPMsg", "Erro geral no envio da mensagem");
                 }
 
                 int count = 0;

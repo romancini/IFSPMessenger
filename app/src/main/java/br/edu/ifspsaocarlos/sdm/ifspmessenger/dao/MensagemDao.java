@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,8 @@ public class MensagemDao {
         Mensagem mensagem;
         db = helper.getWritableDatabase();
         Cursor c = db.rawQuery(
-                "SELECT id, origem_id, destino_id, assunto, corpo" +
-                "from mensagens" +
+                "SELECT id, origem_id, destino_id, assunto, corpo " +
+                "from mensagens " +
                 "where (origem_id = (select id from usuarios where logado = 1) " +
                 "          and destino_id = " + idContatoConversa + ") " +
                 "        or " +
