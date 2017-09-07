@@ -29,6 +29,7 @@ import br.edu.ifspsaocarlos.sdm.ifspmessenger.dao.MensagemDao;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.dao.UsuarioDao;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.models.Mensagem;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.models.Usuario;
+import br.edu.ifspsaocarlos.sdm.ifspmessenger.services.MensagensService;
 import br.edu.ifspsaocarlos.sdm.ifspmessenger.utils.ListaMensagemAdapter;
 
 public class ConversaActivity extends AppCompatActivity implements View.OnClickListener {
@@ -40,6 +41,8 @@ public class ConversaActivity extends AppCompatActivity implements View.OnClickL
     private ThreadMensagens threadMensagens;
     private MensagemDao mensagemDao;
     private List<Mensagem> mensagens;
+
+    private Intent mensagemServicoIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,9 @@ public class ConversaActivity extends AppCompatActivity implements View.OnClickL
         // rodar processo para ficar lendo banco de dados de mensagens para o contato
         threadMensagens = new ThreadMensagens();
         threadMensagens.start();
+
+        mensagemServicoIntent = new Intent(getApplicationContext(), MensagensService.class);
+        startService(mensagemServicoIntent);
     }
 
     @Override
@@ -125,7 +131,7 @@ public class ConversaActivity extends AppCompatActivity implements View.OnClickL
                             });
                     queue.add(jsonObjectRequest);
                 }catch (Exception e ) {
-                    Log.e("IFSPMsg", "Erro geral no envio da mensagem");
+                    Log.e("IFSPMsg", "Erro geral no envio da mensagem: " + e.toString());
                 }
 
                 int count = 0;

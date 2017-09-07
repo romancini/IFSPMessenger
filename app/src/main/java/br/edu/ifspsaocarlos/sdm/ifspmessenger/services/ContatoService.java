@@ -45,6 +45,7 @@ public class ContatoService extends Service implements Runnable{
         primeiraBusca = true;
         ultimoNumeroContatos = 0;
         new Thread(this).start();
+        Log.i("IFSPMsg", "Serviço Contato rodando");
     }
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);

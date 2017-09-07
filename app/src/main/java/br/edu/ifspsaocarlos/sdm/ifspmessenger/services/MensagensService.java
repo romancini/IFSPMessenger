@@ -53,16 +53,18 @@ public class MensagensService extends Service implements Runnable{
         ultimaMensagem = 1;
         ultimaMensagemLocal = 1;
         new Thread(this).start();
+        Log.i("IFSPMsg", "Serviço Mensagem rodando");
     }
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
     }
     public void run() {
-        while (appAberta) {
+        while (true) {
             try {
                 Thread.sleep(getResources().getInteger(R.integer.tempo_inatividade_servico));
-                buscaNovaMensagem();
-                UsuarioDao usuarioDao = new UsuarioDao(getBaseContext());
+                ultimaMensagem = buscaNovaMensagem();
+                Log.i("IFSPMsg", "ultimaMensagem = " + ultimaMensagem);
+                Log.i("IFSPMsg", "ultimaMensagemLocal = " + ultimaMensagemLocal);
                 if (!primeiraBusca && ultimaMensagem != ultimaMensagemLocal) {
                     NotificationManager nm = (NotificationManager)
                             getSystemService(NOTIFICATION_SERVICE);
@@ -94,7 +96,8 @@ public class MensagensService extends Service implements Runnable{
             }
         }
     }
-    private void buscaNovaMensagem() {
+    private int buscaNovaMensagem() {
+        Log.i("IFSPMsg", "Entrou em buscaNovaMensagem");
         RequestQueue queue = Volley.newRequestQueue(MensagensService.this);
         try {
             JsonObjectRequest jsonObjectRequest;
@@ -103,11 +106,13 @@ public class MensagensService extends Service implements Runnable{
             // procurar nos contatos adicionados (contato = 1) se
             // há mensagem com id maior que a ultima mensagem
             List<Usuario> contatos = usuarioDao.obterContatosConversasAtivas();
+            Log.i("IFSPMsg", "contatos.size() = " + contatos.size());
             for (int i = 0; i < contatos.size(); i++){
                 url = R.string.URL_BASE + "mensagem/" +
                         usuarioDao.obterIdUsuarioLogado() + "/" +
                         contatos.get(i).getId() + "/" +
                         ultimaMensagem;
+                Log.i("IFSPMsg", "Request: " + url);
                 jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                     new Response.Listener<JSONObject>() {
                         public void onResponse(JSONObject s) {
@@ -144,6 +149,7 @@ public class MensagensService extends Service implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return ultimaMensagem;
     }
     @Override
     public void onDestroy() {

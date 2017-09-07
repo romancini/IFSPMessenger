@@ -40,6 +40,7 @@ public class MensagemDao {
                 "      (destino_id = (select id from usuarios where logado = 1) " +
                 "          and origem_id = " + idContatoConversa + ")" +
                 "order by id", null);
+        Log.i("IFSPMsg", "Mensagens encontradas: " + c.getCount());
         if (c != null ) {
             if  (c.moveToFirst()) {
                 do {
@@ -62,7 +63,7 @@ public class MensagemDao {
     public String obterStringCadastro(int idUsuarioLogado, int idContato, String corpo) {
         String retorno =  "{\"origem_id\":\"" + idUsuarioLogado + "\"," +
                 "\"destino_id\":\""+ idContato + "\"," +
-                "\"assunto\":" + " " + "," +
+                "\"assunto\":\"" + "sem assunto" + "\"," +
                 "\"corpo\":\"" + corpo + "\"}";
         return retorno;
     }
